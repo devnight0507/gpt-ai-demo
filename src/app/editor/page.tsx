@@ -7,7 +7,7 @@ const CodeEditor = ({ value, onChange, language }: { value: string, onChange: (v
   <textarea
     value={value}
     onChange={(e) => onChange(e.target.value)}
-    className="w-full h-full p-4 font-mono text-sm border-none outline-none resize-none bg-gray-50"
+    className="w-full h-full p-4 font-mono text-sm text-gray-700 border-none outline-none resize-none bg-gray-50"
     placeholder={`Enter your ${language.toUpperCase()} code here...`}
     spellCheck={false}
   />
@@ -60,6 +60,7 @@ export default function EditorPage() {
   }, [router]);
 
   const updatePreview = () => {
+    console.log('Updating preview with code:', code);
     if (previewRef.current) {
       const doc = previewRef.current.contentDocument;
       if (doc) {
@@ -79,9 +80,21 @@ export default function EditorPage() {
           </html>
         `);
         doc.close();
+        console.log('Preview updated successfully');
+      } else {
+        console.log('Preview: no contentDocument available');
       }
+    } else {
+      console.log('Preview: iframe ref not available');
     }
   };
+
+  // Auto-update preview when code changes
+  useEffect(() => {
+    if (code.html || code.css || code.js) {
+      updatePreview();
+    }
+  }, [code]);
 
   const handleCodeChange = (value: string, language: 'html' | 'css' | 'js') => {
     setCode(prev => ({ ...prev, [language]: value }));
@@ -306,8 +319,9 @@ ${code.js}
               <iframe
                 ref={previewRef}
                 className="w-full h-full border-0"
-                sandbox="allow-scripts allow-modals"
+                sandbox="allow-scripts allow-modals allow-same-origin"
                 onLoad={updatePreview}
+                title="Live Preview"
                 key={previewKey}
               />
             </div>
