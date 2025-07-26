@@ -155,7 +155,7 @@ export default function Home() {
       </main>
 
       <footer className="text-center text-white/60 py-8">
-        <p>&copy; 2024 LaunchAI. Built for indie creators, by indie creators.</p>
+        <p>&copy; 2025 LaunchAI. Built for indie creators, by indie creators.</p>
       </footer>
     </div>
   );
